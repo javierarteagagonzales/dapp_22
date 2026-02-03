@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DApp Universitaria: Laboratorio Ethereum</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="badge">Campus Blockchain</p>
+        <h1>Laboratorio Ethereum para la universidad</h1>
+        <p>
+          Aprende conceptos clave de Ethereum en un entorno académico: cuentas,
+          gas, transacciones y bloques. Esta DApp educativa simula el flujo de
+          una red para apoyar clases de ingeniería, economía y derecho digital.
+        </p>
+        <div class="hero-actions">
+          <button id="connectWallet" class="primary">Conectar wallet</button>
+          <button id="resetLab" class="ghost">Reiniciar laboratorio</button>
+        </div>
+        <p class="wallet-status" id="walletStatus">Sin wallet conectada</p>
+        <p class="wallet-status" id="walletNetwork">Red: -</p>
+      </div>
+      <div class="hero-card">
+        <h2>Panel docente</h2>
+        <ul>
+          <li>Explica la ruta de una transacción en 3 pasos.</li>
+          <li>Visualiza el impacto del gas y la congestión.</li>
+          <li>Simula becas tokenizadas para proyectos universitarios.</li>
+        </ul>
+        <div class="stat-grid">
+          <div>
+            <span id="blockHeight" class="stat">#1204</span>
+            <span class="stat-label">Bloque actual</span>
+          </div>
+          <div>
+            <span id="gasPrice" class="stat">32 gwei</span>
+            <span class="stat-label">Gas base</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="grid two">
+        <div class="card">
+          <h2>Cuentas del campus</h2>
+          <p>
+            Cada cuenta representa un rol universitario con saldo en ETH y
+            tokens académicos (ACAD). Usa estas cuentas para simular pagos de
+            matrícula, becas o acceso a laboratorios.
+          </p>
+          <div class="account-list" id="accountList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Crear transacción académica</h2>
+          <form id="txForm">
+            <label>
+              Remitente
+              <select id="fromAccount"></select>
+            </label>
+            <label>
+              Destino
+              <select id="toAccount"></select>
+            </label>
+            <label>
+              Concepto
+              <select id="txPurpose">
+                <option value="Matricula">Pago de matrícula</option>
+                <option value="Beca">Asignación de beca</option>
+                <option value="Laboratorio">Uso de laboratorio</option>
+                <option value="Proyecto">Fondos para proyecto</option>
+              </select>
+            </label>
+            <label>
+              Monto en ETH
+              <input id="amount" type="number" min="0.01" step="0.01" value="0.5" />
+            </label>
+            <label>
+              Límite de gas
+              <input id="gasLimit" type="number" min="21000" step="1000" value="45000" />
+            </label>
+            <button class="primary" type="submit">Enviar transacción</button>
+          </form>
+          <div class="helper" id="txHelper"></div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <div class="card">
+          <h2>Wallet real (MetaMask)</h2>
+          <p>
+            Conecta tu wallet para obtener tu dirección real, saldo y firmar una
+            transacción en la red que selecciones.
+          </p>
+          <div class="wallet-grid">
+            <div>
+              <span class="label">Dirección</span>
+              <p id="walletAddress" class="big">-</p>
+            </div>
+            <div>
+              <span class="label">Saldo disponible</span>
+              <p id="walletBalance" class="big">-</p>
+            </div>
+          </div>
+          <p class="note">
+            Usa una red de pruebas si quieres experimentar sin fondos reales.
+          </p>
+        </div>
+        <div class="card">
+          <h2>Enviar ETH real</h2>
+          <form id="realTxForm">
+            <label>
+              Destinatario
+              <input id="realTo" type="text" placeholder="0x..." required />
+            </label>
+            <label>
+              Monto en ETH
+              <input id="realAmount" type="number" min="0.0001" step="0.0001" required />
+            </label>
+            <button class="primary" type="submit">Enviar con wallet</button>
+          </form>
+          <div class="helper" id="realTxHelper">Conecta la wallet para habilitar.</div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <div class="card">
+          <h2>Estado de la red</h2>
+          <div class="network">
+            <div>
+              <span class="label">Congestión</span>
+              <div class="meter">
+                <div id="congestionFill" class="fill"></div>
+              </div>
+            </div>
+            <div>
+              <span class="label">Tiempo estimado de bloque</span>
+              <p id="blockTime" class="big">13.2 s</p>
+            </div>
+            <div>
+              <span class="label">Transacciones pendientes</span>
+              <p id="pendingTx" class="big">3</p>
+            </div>
+          </div>
+          <p class="note">
+            El gas base sube cuando hay más solicitudes. Ajusta el límite de gas
+            para observar cómo impacta en la prioridad de una transacción.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Cadena de bloques simulada</h2>
+          <div class="blockchain" id="blockchain"></div>
+          <p class="note">
+            Cada bloque agrupa transacciones académicas, creando un registro
+            inmutable para auditorías universitarias.
+          </p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Cómo funciona Ethereum (resumen universitario)</h2>
+        <ol class="steps">
+          <li>
+            <strong>Firma:</strong> el estudiante o docente firma la transacción
+            con su clave privada.
+          </li>
+          <li>
+            <strong>Gas:</strong> la red cobra gas por ejecutar el contrato
+            académico.
+          </li>
+          <li>
+            <strong>Bloques:</strong> las transacciones se agrupan en bloques y
+            se replican en todos los nodos.
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Diseñado para cursos de blockchain, finanzas descentralizadas y gestión
+        universitaria.
+      </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
